@@ -16,6 +16,4 @@ def load_config():
     for key in config:
         setattr(cfg, key, config[key])
 
-    cfg.scheduler.append(np.nan)
-
     return cfg

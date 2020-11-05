@@ -1,7 +1,7 @@
 # device: "cuda" | "cpu"
 device: cuda
 debug_mode: false
-imbalance: false
+imbalance: true
 offset: true
 
 # distributed networks
@@ -39,7 +39,7 @@ tau: 20
 # lr: 0.0005
 # lr: 0.05
 lr: 0.0005
-gamma: 1.2
+gamma: 1.0
 momentum: 0
 weight_decay: 1.e-10
 

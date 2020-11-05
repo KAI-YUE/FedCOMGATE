@@ -114,7 +114,7 @@ class LocalUpdater(object):
 
     def _offset(self, model, offset_times_lr):
         model_buffer = WeightBuffer(model.state_dict())
-        model_buffer = model_buffer - offset_times_lr
+        model_buffer = model_buffer + offset_times_lr
         model.load_state_dict(model_buffer.state_dict())
 
     def uplink_transmit(self):
