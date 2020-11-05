@@ -183,4 +183,4 @@ class GlobalUpdater(object):
 
 def update_offset_buffers(offset_buffers, local_residuals, accumulated_delta, tau):
     for i, offset in enumerate(offset_buffers):
-        offset = offset + (local_residuals[i] - accumulated_delta)*(1/tau)
+        offset_buffers[i] = offset + (local_residuals[i] - accumulated_delta)*(1/tau)
