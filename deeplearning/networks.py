@@ -23,7 +23,7 @@ class NaiveCNN(nn.Module):
         super(NaiveCNN, self).__init__()
         self.channels = in_channels
         if "in_dims" in kwargs:
-            self.input_size = int(np.sqrt(kwargs["in_dims"]/channels))
+            self.input_size = int(np.sqrt(kwargs["in_dims"]/self.channels))
         else:
             self.input_size = 28
         
@@ -32,7 +32,7 @@ class NaiveCNN(nn.Module):
         self.fc_input_size = int(self.fc_input_size)**2 * 20
 
         self.predictor = nn.Sequential(
-                    nn.Conv2d(channels, 10, kernel_size=kernel_size),
+                    nn.Conv2d(self.channels, 10, kernel_size=kernel_size),
                     nn.ReLU(),
                     nn.Conv2d(10, 20, kernel_size=kernel_size),
                     nn.MaxPool2d(kernel_size=kernel_size, stride=2),

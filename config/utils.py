@@ -32,11 +32,9 @@ def init_logger(config):
     return logger
 
 def save_record(config, record):
-    record["cumulated_KB"].pop(0)
     current_path = os.path.dirname(__file__)
     current_time = datetime.datetime.now()
     current_time_str = datetime.datetime.strftime(current_time ,'%H_%M')
-    current_time_str += str(config.delta_k)
     file_name = config.record_dir.format(current_time_str)
     with open(os.path.join(current_path, file_name), "wb") as fp:
         pickle.dump(record, fp)
@@ -44,14 +42,20 @@ def save_record(config, record):
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-def init_model(config):
+def init_model(config, logger):
     # initialize the model
     sample_size = config.sample_size[0] * config.sample_size[1]
-    classifier = nn_registry[config.model](in_dims=sample_size, in_channels=config.channels, out_dims=config.classes)
-    classifier.apply(init_weights)
-    classifier.to(config.device)
+    full_model = nn_registry[config.model](in_dims=sample_size, in_channels=config.channels, out_dims=config.classes)
+    full_model.apply(init_weights)
 
-    return classifier
+    if os.path.exists(config.full_weight_dir):
+        logger.info("--- Load pre-trained full precision model. ---")
+        state_dict = torch.load(config.full_weight_dir)
+        full_model.load_state_dict(state_dict)
+
+    full_model.to(config.device)
+
+    return full_model
 
 def init_record(config, model):
     record = {}
@@ -67,8 +71,6 @@ def init_record(config, model):
 
     # initialize data record 
     record["testing_accuracy"] = []
-    record["residuals"] = []
-    record["quant_error"] = []
     record["loss"] = []
 
     return record

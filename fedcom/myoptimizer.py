@@ -5,13 +5,14 @@ import copy
 # PyTorch libraries
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, WeightedRandomSampler
 import torch.optim as optim
 from torch.optim import Optimizer
 
 # My libraries
 from fedcom.buffer import WeightBuffer
 from fedcom import quantizer_registry
+from config.utils import parse_dataset_type
 from deeplearning import UserDataset
 
 class LocalUpdater(object):
@@ -47,12 +48,29 @@ class LocalUpdater(object):
 
         self.local_weight = None
         self.init_weight = None
-        self.sample_loader = DataLoader(UserDataset(user_resource["images"], user_resource["labels"]), 
-                                       batch_size=self.batch_size)
+        dataset_type = parse_dataset_type(config)
+
+        if config.imbalance:
+            sampler = WeightedRandomSampler(user_resource["sampling_weight"], 
+                                    num_samples=user_resource["sampling_weight"].shape[0])
+
+            self.sample_loader = \
+                DataLoader(UserDataset(user_resource["images"], 
+                                user_resource["labels"],
+                                dataset_type), 
+                            sampler=sampler,
+                            # sampler=None,
+                            batch_size=self.batch_size)
+        else:
+            self.sample_loader = \
+                DataLoader(UserDataset(user_resource["images"], 
+                            user_resource["labels"],
+                            dataset_type), sampler=None, batch_size=self.batch_size)
 
         self.criterion = nn.CrossEntropyLoss()
         self.quantizer = quantizer_registry[config.quantizer](config)
         self.tau = config.tau
+        self.offset_on = config.offset
 
     def local_step(self, model, offset):
         """Perform local update tau times.
@@ -81,7 +99,8 @@ class LocalUpdater(object):
                 loss.backward()
                 optimizer.step()                        # w^(c+1) = w^(c) - \eta \hat{grad}
 
-                self._offset(model, offset_times_lr)      # w^(c+1) = w^(c) - \eta \hat{grad} + \eta \delta
+                if self.offset_on:
+                    self._offset(model, offset_times_lr)      # w^(c+1) = w^(c) - \eta \hat{grad} + \eta \delta
 
                 tau_counter += 1
                 if tau_counter > self.tau:
@@ -130,7 +149,7 @@ class GlobalUpdater(object):
         """
         self.quantizer = quantizer_registry[config.quantizer](config)
 
-        self.num_users = int(config.users * config.sampling_fraction)
+        self.num_users = config.users
         self.lr = config.lr
         self.gamma = config.gamma
         self.debug_mode = config.debug_mode

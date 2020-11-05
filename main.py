@@ -28,16 +28,11 @@ def train(model, config, logger, record):
         record (dict):           a record for train info saving.  
     """    
     # initialize userIDs
-    if config.random_sampling:
-        users_to_sample = int(config.users * config.sampling_fraction)
-    else:
-        users_to_sample = config.users
+    users_to_sample = config.users
     userIDs = np.arange(config.users) 
 
     # initialize the optimizer for the server model
     dataset = assign_user_data(config, logger)
-    iterations_per_epoch = np.ceil((dataset["train_data"]["images"].shape[0] * config.sampling_fraction) / config.local_batch_size)
-    iterations_per_epoch = iterations_per_epoch.astype(np.int)
 
     # initialize the delta offset buffers and local residual buffers
     offset_buffers = []
@@ -52,9 +47,6 @@ def train(model, config, logger, record):
     validate_and_log(model, dataset, config, record, logger)
     
     for comm_round in range(config.rounds):
-        # Sample a fraction of users randomly
-        if config.random_sampling:
-            np.random.shuffle(userIDs)
         userIDs_candidates = userIDs[:users_to_sample]
         
         # Wait for all users updating locally
@@ -72,17 +64,18 @@ def train(model, config, logger, record):
 
         # Update local offsets
         update_offset_buffers(offset_buffers, 
-            residual_buffers, 
+            residual_buffers,
             global_updater.accumulated_delta, 
             config.tau)
 
         # log and record
+        logger.info("Round {:d}".format(comm_round))
         validate_and_log(model, dataset, config, record, logger)
 
 def main():
     config = load_config()
     logger = init_logger(config)
-    model = init_model(config)
+    model = init_model(config, logger)
     record = init_record(config, model)
     train(model, config, logger, record)
     save_record(config, record)

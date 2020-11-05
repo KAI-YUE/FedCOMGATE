@@ -1,6 +1,8 @@
 # device: "cuda" | "cpu"
 device: cuda
 debug_mode: false
+imbalance: false
+offset: true
 
 # distributed networks
 # users:            number of users
@@ -9,14 +11,12 @@ debug_mode: false
 # alpha:             the alpha parameter of the Dirichlet distribution 
 rounds: 30
 users: 30
-random_sampling: false
-sampling_fraction: 1
 iid: true
 # iid: false
 # alpha: 0.01
 user_with_data: ""
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_0.05.dat"
-# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_0.10.dat"
+user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_0.10.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_1.00.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist/user_dataidx_map_0.10_0.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist/user_dataidx_map_0.05_0.dat"
@@ -32,23 +32,27 @@ user_with_data: ""
 # model: "naiveCNN"
 # model: "naiveMLP"
 model: "bn"
-local_batch_size: 128
+# full_weight_dir: "/media/kaiyue/2D8A97B87FB4A806/Datasets/heuristic/full_init.pth"
+full_weight_dir: ""
+local_batch_size: 100
 tau: 20
 # lr: 0.0005
+# lr: 0.05
 lr: 0.0005
-gamma: 1
-rounds: 50
+gamma: 1.2
 momentum: 0
-weight_decay: 0
+weight_decay: 1.e-10
+
 
 # predictor: previous_frame | delta_step 
 # quantization_level: (2*s + 1)
 # combined_quantize: whether or not the MSB is 
 #                   combined in the quantization  
-quantization_level: 128
+quantization_level: 256
 # quantization_level: 0
 # quantizer: "plain"
-quantizer: "qsgd"
+# quantizer: "qsgd"
+quantizer: "uniform"
 
 
 # Simulation dataset configurations
