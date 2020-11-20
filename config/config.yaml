@@ -1,8 +1,8 @@
 # device: "cuda" | "cpu"
 device: cuda
-debug_mode: false
+debug_mode: true
 imbalance: false
-offset: true
+offset: false
 
 # distributed networks
 # users:            number of users
@@ -10,7 +10,7 @@ offset: true
 # sampling_fraction: the fraction of users to sample
 # alpha:             the alpha parameter of the Dirichlet distribution 
 rounds: 30
-users: 30
+users: 29
 iid: true
 # iid: false
 # alpha: 0.01
@@ -20,6 +20,8 @@ user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/u
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_1.00.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist/user_dataidx_map_0.10_0.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist/user_dataidx_map_0.05_0.dat"
+# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist100/user_dataidx_map_2labels.dat"
+# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/iid_map.dat"
 
 # hyperparameters and model type
 # model:            "naiveMLP", "naiveCNN"
@@ -28,31 +30,37 @@ user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/u
 # gamma:            gamma parameter described in the paper 
 # rounds:           total communication rounds upper bound
 # momentum:         momentum settings for SGD  
-
 # model: "naiveCNN"
 # model: "naiveMLP"
 model: "bn"
 full_weight_dir: ""
-full_weight_dir: "/media/kaiyue/2D8A97B87FB4A806/Datasets/heuristic/full_init.pth"
+# full_weight_dir: "/media/kaiyue/2D8A97B87FB4A806/Datasets/heuristic/full_init.pth"
+# full_weight_dir: "./checkpoint/full_init.pth"
 local_batch_size: 100
-tau: 20
-# lr: 0.0005
-# lr: 0.05
-lr: 0.0005
-gamma: 1
+tau: 80
+# lr: 0.1
+# lr: 0.01
+lr: 0.0003
+gamma: 1.
 momentum: 0
 weight_decay: 1.e-10
-
+lr_scaler: 0.5
+scheduler: 
+# - 10
+# - 20
+# - 30
+# - 40
+- 1000
 
 # predictor: previous_frame | delta_step 
 # quantization_level: (2*s + 1)
 # combined_quantize: whether or not the MSB is 
 #                   combined in the quantization  
-quantization_level: 256
+quantization_level: 2
 # quantization_level: 0
 # quantizer: "plain"
-# quantizer: "qsgd"
-quantizer: "uniform"
+quantizer: "qsgd"
+# quantizer: "uniform"
 
 
 # Simulation dataset configurations

@@ -21,6 +21,10 @@ class UniformQuantizer(Quantizer):
         quantized_arr = torch.round(quantized_arr).to(torch.int)
         
         quantized_set = dict(max_val=max_val, signs=sign_arr, quantized_arr=quantized_arr)
+        
+        if self.debug_mode:
+            quantized_set["original_arr"] = arr.clone()
+        
         return quantized_set
     
     def dequantize(self, quantized_set):

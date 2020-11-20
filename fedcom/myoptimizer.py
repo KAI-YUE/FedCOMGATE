@@ -65,7 +65,10 @@ class LocalUpdater(object):
             self.sample_loader = \
                 DataLoader(UserDataset(user_resource["images"], 
                             user_resource["labels"],
-                            dataset_type), sampler=None, batch_size=self.batch_size)
+                            dataset_type), 
+                    sampler=None, 
+                    batch_size=self.batch_size,
+                    shuffle=True)
 
         self.criterion = nn.CrossEntropyLoss()
         self.quantizer = quantizer_registry[config.quantizer](config)
@@ -97,13 +100,13 @@ class LocalUpdater(object):
                 output = model(image)
                 loss = self.criterion(output, label)
                 loss.backward()
-                optimizer.step()                        # w^(c+1) = w^(c) - \eta \hat{grad}
+                optimizer.step()                              # w^(c+1) = w^(c) - \eta \hat{grad}
 
                 if self.offset_on:
                     self._offset(model, offset_times_lr)      # w^(c+1) = w^(c) - \eta \hat{grad} + \eta \delta
 
                 tau_counter += 1
-                if tau_counter > self.tau:
+                if tau_counter >= self.tau:
                     break_flag = True
                     break
         
@@ -155,7 +158,6 @@ class GlobalUpdater(object):
         self.debug_mode = config.debug_mode
 
         self.accumulated_delta = None
-        self.local_residuals = None
 
     def global_step(self, model, local_packages, local_residual_buffers, **kwargs):
         """Perform a global update with collocted coded info from local users.

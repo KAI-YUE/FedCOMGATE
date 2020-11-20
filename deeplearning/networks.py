@@ -5,12 +5,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class NaiveMLP(nn.Module):
-    def __init__(self, in_dims, out_dims, dim_hidden=128):
+    def __init__(self, in_dims, out_dims, dim_hidden=200, **kwargs):
         super(NaiveMLP, self).__init__()
         self.predictor = nn.Sequential(
                             nn.Linear(in_dims, dim_hidden),
                             nn.ReLU(),
-                            nn.Linear(dim_hidden, out_dims)
+                            nn.Linear(dim_hidden, dim_hidden),
+                            nn.ReLU(),
+                            nn.Linear(dim_hidden, out_dims),
                          )
 
     def forward(self, x):

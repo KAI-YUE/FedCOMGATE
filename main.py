@@ -66,14 +66,23 @@ def train(model, config, logger, record):
         update_offset_buffers(offset_buffers, 
             residual_buffers,
             global_updater.accumulated_delta, 
-            config.tau)
+            config.tau) 
 
         # log and record
         logger.info("Round {:d}".format(comm_round))
         validate_and_log(model, dataset, config, record, logger)
 
+        # if comm_round == config.scheduler[0]:
+        #     config.lr *= config.lr_scaler
+        #     config.scheduler.pop(0)
+
 def main():
     config = load_config()
+    
+    if config.device == "cuda":
+        torch.backends.cudnn.benchmark = True
+        torch.backends.cudnn.deterministic = True
+
     logger = init_logger(config)
     model = init_model(config, logger)
     record = init_record(config, model)
