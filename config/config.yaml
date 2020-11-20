@@ -1,4 +1,5 @@
 # device: "cuda" | "cpu"
+# offset:           if set to true, the FedCOMGATE will be enabled
 device: cuda
 debug_mode: true
 imbalance: false
