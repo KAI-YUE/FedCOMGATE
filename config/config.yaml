@@ -17,7 +17,7 @@ iid: true
 # alpha: 0.01
 user_with_data: ""
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_0.05.dat"
-user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_0.10.dat"
+# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_0.10.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_1.00.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist/user_dataidx_map_0.10_0.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist/user_dataidx_map_0.05_0.dat"
@@ -41,7 +41,8 @@ local_batch_size: 100
 tau: 80
 # lr: 0.1
 # lr: 0.01
-lr: 0.0003
+lr: 0.0001
+# lr: 0.00001
 gamma: 1.
 momentum: 0
 weight_decay: 1.e-10
