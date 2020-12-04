@@ -83,8 +83,8 @@ class LocalUpdater(object):
             offset(tensor):         delta offset term preventing client drift.
         """
         self.init_weight = copy.deepcopy(model.state_dict())
-        # optimizer = optim.SGD(model.parameters(), lr=self.lr, momentum=self.momentum)
-        optimizer = optim.Adam(model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        optimizer = optim.SGD(model.parameters(), lr=self.lr, momentum=self.momentum)
+        # optimizer = optim.Adam(model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
         
         tau_counter = 0
         break_flag = False
@@ -132,7 +132,7 @@ class LocalUpdater(object):
         quantized_sets = [] 
         for w_name, w_pred in self.local_weight.items():
             residual = self.init_weight[w_name] - self.local_weight[w_name]
-            quantized_set = self.quantizer.quantize(residual/self.lr)
+            quantized_set = self.quantizer.quantize(residual)
 
             quantized_sets.append(quantized_set)
 
@@ -178,7 +178,7 @@ class GlobalUpdater(object):
         accumulated_delta = accumulated_delta*(1/self.num_users)
 
         global_model = WeightBuffer(global_model_state_dict)
-        global_model -= accumulated_delta*(self.lr*self.gamma)
+        global_model -= accumulated_delta
         model.load_state_dict(global_model.state_dict())
 
         self.accumulated_delta = accumulated_delta

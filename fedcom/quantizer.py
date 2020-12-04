@@ -52,7 +52,7 @@ class QsgdQuantizer(Quantizer):
         rand_variable = torch.empty_like(arr).uniform_() 
         is_upper_level = rand_variable < (level_float - lower_level)
         new_level = (lower_level + is_upper_level)
-        quantized_arr = torch.round(new_level).to(torch.int)
+        quantized_arr = torch.round(new_level)
 
         sign = arr.sign()
         quantized_set = dict(norm=norm, signs=sign, quantized_arr=quantized_arr)
