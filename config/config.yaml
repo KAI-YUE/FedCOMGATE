@@ -11,7 +11,7 @@ offset: false
 # sampling_fraction: the fraction of users to sample
 # alpha:             the alpha parameter of the Dirichlet distribution 
 rounds: 30
-users: 29
+users: 30
 iid: true
 # iid: false
 # alpha: 0.01
@@ -23,6 +23,7 @@ user_with_data: ""
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist/user_dataidx_map_0.05_0.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist100/user_dataidx_map_2labels.dat"
 # user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/iid_map.dat"
+user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/iid_mapping/iid_mapping_0.dat"
 
 # hyperparameters and model type
 # model:            "naiveMLP", "naiveCNN"
@@ -33,15 +34,16 @@ user_with_data: ""
 # momentum:         momentum settings for SGD  
 # model: "naiveCNN"
 # model: "naiveMLP"
-model: "bn"
+# model: "bn"
+model: "lenet"
 full_weight_dir: ""
 # full_weight_dir: "/media/kaiyue/2D8A97B87FB4A806/Datasets/heuristic/full_init.pth"
 # full_weight_dir: "./checkpoint/full_init.pth"
 local_batch_size: 100
-tau: 80
+tau: 20
 # lr: 0.1
-# lr: 0.01
-lr: 0.0001
+# lr: 0.05
+lr: 0.0005
 # lr: 0.00001
 gamma: 1.
 momentum: 0

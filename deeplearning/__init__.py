@@ -5,5 +5,6 @@ nn_registry = {
     "naiveMLP": NaiveMLP,
     "naiveCNN": NaiveCNN,
 
-    "bn":   FullPrecision_BN
+    "bn":   FullPrecision_BN,
+    "lenet": LeNet_5
 }
