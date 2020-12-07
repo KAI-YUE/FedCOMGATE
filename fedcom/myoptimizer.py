@@ -83,8 +83,8 @@ class LocalUpdater(object):
             offset(tensor):         delta offset term preventing client drift.
         """
         self.init_weight = copy.deepcopy(model.state_dict())
-        optimizer = optim.SGD(model.parameters(), lr=self.lr, momentum=self.momentum)
-        # optimizer = optim.Adam(model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        # optimizer = optim.SGD(model.parameters(), lr=self.lr, momentum=self.momentum)
+        optimizer = optim.Adam(model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
         
         tau_counter = 0
         break_flag = False

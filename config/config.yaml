@@ -32,16 +32,16 @@ user_with_data: ""
 # rounds:           total communication rounds upper bound
 # momentum:         momentum settings for SGD  
 # model: "naiveCNN"
-# model: "naiveMLP"
-model: "bn"
+# model: "bn"
+model: "lenet"
 full_weight_dir: ""
 # full_weight_dir: "/media/kaiyue/2D8A97B87FB4A806/Datasets/heuristic/full_init.pth"
 # full_weight_dir: "./checkpoint/full_init.pth"
 local_batch_size: 100
 tau: 20
 # lr: 0.1
-lr: 0.1
-# lr: 0.0003
+# lr: 0.1
+lr: 0.0005
 gamma: 30.
 momentum: 0
 weight_decay: 1.e-10
