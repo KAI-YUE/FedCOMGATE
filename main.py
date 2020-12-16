@@ -81,7 +81,7 @@ def main():
     
     if config.device == "cuda":
         torch.backends.cudnn.benchmark = True
-        torch.backends.cudnn.deterministic = True
+        # torch.backends.cudnn.deterministic = True
 
     logger = init_logger(config)
     model = init_model(config, logger)

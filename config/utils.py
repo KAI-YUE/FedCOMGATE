@@ -44,7 +44,7 @@ def count_parameters(model):
 
 def init_model(config, logger):
     # initialize the model
-    sample_size = config.sample_size[0] * config.sample_size[1]
+    sample_size = config.sample_size[0] * config.sample_size[1] * config.channels
     full_model = nn_registry[config.model](in_dims=sample_size, in_channels=config.channels, out_dims=config.classes)
     full_model.apply(init_weights)
 

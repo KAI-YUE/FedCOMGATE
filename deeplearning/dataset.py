@@ -180,7 +180,7 @@ def assign_user_resource(config, userID, train_dataset, user_with_data):
     user_resource["sampling_weight"] = sampling_weight
 
     # shuffle the sampleIDs
-    # np.random.shuffle(user_with_data[userID])
+    np.random.shuffle(user_with_data[userID])
 
     return user_resource
 

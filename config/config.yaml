@@ -10,20 +10,13 @@ offset: false
 # random_sampling:   whether or not perform random sampling before each iteration
 # sampling_fraction: the fraction of users to sample
 # alpha:             the alpha parameter of the Dirichlet distribution 
-rounds: 30
-users: 30
+rounds: 100
+users: 31
 iid: true
 # iid: false
 # alpha: 0.01
 user_with_data: ""
-# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_0.05.dat"
-# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_0.10.dat"
-# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/fmnist/user_dataidx_map_1.00.dat"
-# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist/user_dataidx_map_0.10_0.dat"
-# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist/user_dataidx_map_0.05_0.dat"
-# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/mnist100/user_dataidx_map_2labels.dat"
-# user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/iid_map.dat"
-user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/iid_mapping/iid_mapping_0.dat"
+user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/cifar/iid/iid_mapping_0.dat"
 
 # hyperparameters and model type
 # model:            "naiveMLP", "naiveCNN"
@@ -34,15 +27,17 @@ user_with_data: "/media/kaiyue/2D8A97B87FB4A806/Datasets/user_with_data/iid_mapp
 # momentum:         momentum settings for SGD  
 # model: "naiveCNN"
 # model: "bn"
-model: "lenet"
+# model: "lenet"
+model: "vgg"
 full_weight_dir: ""
 # full_weight_dir: "/media/kaiyue/2D8A97B87FB4A806/Datasets/heuristic/full_init.pth"
 # full_weight_dir: "./checkpoint/full_init.pth"
 local_batch_size: 100
-tau: 20
+tau: 80
 # lr: 0.1
-# lr: 0.05
-lr: 0.0005
+# lr: 0.01
+lr: 0.001
+# lr: 0.0005
 # lr: 0.00001
 gamma: 1.
 momentum: 0
@@ -57,8 +52,6 @@ scheduler:
 
 # predictor: previous_frame | delta_step 
 # quantization_level: the level of the quantization
-# combined_quantize: whether or not the MSB is 
-#                   combined in the quantization  
 quantization_level: 2
 # quantization_level: 0
 # quantizer: "plain"
@@ -74,22 +67,22 @@ quantizer: "qsgd"
 record_dir:     ../This{}.dat
 # test_data_dir:  /media/kaiyue/2D8A97B87FB4A806/Datasets/mnist/test.dat
 # train_data_dir: /media/kaiyue/2D8A97B87FB4A806/Datasets/mnist/train.dat
-test_data_dir:  /media/kaiyue/2D8A97B87FB4A806/Datasets/fmnist/test.dat
-train_data_dir: /media/kaiyue/2D8A97B87FB4A806/Datasets/fmnist/train.dat
-sample_size:
-- 28
-- 28
-channels: 1
-classes: 10
+# test_data_dir:  /media/kaiyue/2D8A97B87FB4A806/Datasets/fmnist/test.dat
+# train_data_dir: /media/kaiyue/2D8A97B87FB4A806/Datasets/fmnist/train.dat
+# sample_size:
+# - 28
+# - 28
+# channels: 1
+# classes: 10
 
 # record_dir:     ../This{}.dat
-# test_data_dir:  /media/kaiyue/2D8A97B87FB4A806/Datasets/cifar-10-python/test.dat
-# train_data_dir: /media/kaiyue/2D8A97B87FB4A806/Datasets/cifar-10-python/train.dat
-# sample_size:
-# - 32
-# - 32
-# channels: 3
-# classes: 10
+test_data_dir:  /media/kaiyue/2D8A97B87FB4A806/Datasets/cifar/test.dat
+train_data_dir: /media/kaiyue/2D8A97B87FB4A806/Datasets/cifar/train.dat
+sample_size:
+- 32
+- 32
+channels: 3
+classes: 10
 
 
 # Log configurations

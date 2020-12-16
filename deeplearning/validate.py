@@ -52,7 +52,7 @@ def train_loss(model, train_dataset, dataset_type, device="cuda"):
     with torch.no_grad():
         criterion = nn.CrossEntropyLoss()
         dataset = UserDataset(train_dataset["images"], train_dataset["labels"], dataset_type)
-        loss = torch.tensor(0.)
+        loss = torch.tensor(0.).to(device)
 
         dividers = 100
         batch_size = int(len(dataset)/dividers)
