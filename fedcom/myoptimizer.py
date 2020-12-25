@@ -75,7 +75,7 @@ class LocalUpdater(object):
         self.tau = config.tau
         self.offset_on = config.offset
 
-    def local_step(self, model, offset):
+    def local_step(self, model):
         """Perform local update tau times.
 
         Args,
@@ -83,13 +83,12 @@ class LocalUpdater(object):
             offset(tensor):         delta offset term preventing client drift.
         """
         self.init_weight = copy.deepcopy(model.state_dict())
-        # optimizer = optim.SGD(model.parameters(), lr=self.lr, momentum=self.momentum)
-        optimizer = optim.Adam(model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        optimizer = optim.SGD(model.parameters(), lr=self.lr, momentum=self.momentum)
+        # optimizer = optim.Adam(model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
         
         tau_counter = 0
         break_flag = False
 
-        offset_times_lr = offset * self.lr 
 
         while not break_flag:
             for sample in self.sample_loader:
@@ -102,9 +101,6 @@ class LocalUpdater(object):
                 loss.backward()
                 optimizer.step()                              # w^(c+1) = w^(c) - \eta \hat{grad}
 
-                if self.offset_on:
-                    self._offset(model, offset_times_lr)      # w^(c+1) = w^(c) - \eta \hat{grad} + \eta \delta
-
                 tau_counter += 1
                 if tau_counter >= self.tau:
                     break_flag = True
@@ -114,11 +110,6 @@ class LocalUpdater(object):
         
         # load back the model copy hence the global model won't be changed
         model.load_state_dict(self.init_weight)
-
-    def _offset(self, model, offset_times_lr):
-        model_buffer = WeightBuffer(model.state_dict())
-        model_buffer = model_buffer + offset_times_lr
-        model.load_state_dict(model_buffer.state_dict())
 
     def uplink_transmit(self):
         """Simulate the transmission of residual between local updated weight and local received initial weight.
@@ -159,7 +150,7 @@ class GlobalUpdater(object):
 
         self.accumulated_delta = None
 
-    def global_step(self, model, local_packages, local_residual_buffers, **kwargs):
+    def global_step(self, model, local_packages, **kwargs):
         """Perform a global update with collocted coded info from local users.
         """
         accumulated_delta = WeightBuffer(model.state_dict(), mode="zeros")
@@ -167,12 +158,10 @@ class GlobalUpdater(object):
 
         global_model_state_dict = model.state_dict()
         for i, package in enumerate(local_packages):
-            local_residuals_state_dict = local_residual_buffers[i].state_dict()
             for j, w_name in enumerate(global_model_state_dict):
                 # dequantize
                 quantized_sets = package[j]
                 dequantized_residual = self.quantizer.dequantize(quantized_sets)
-                local_residuals_state_dict[w_name] = dequantized_residual
                 accumulated_delta_state_dict[w_name] += dequantized_residual
         
         accumulated_delta = accumulated_delta*(1/self.num_users)
@@ -183,6 +172,3 @@ class GlobalUpdater(object):
 
         self.accumulated_delta = accumulated_delta
 
-def update_offset_buffers(offset_buffers, local_residuals, accumulated_delta, tau):
-    for i, offset in enumerate(offset_buffers):
-        offset_buffers[i] = offset + (local_residuals[i] - accumulated_delta)*(1/tau)

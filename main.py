@@ -35,12 +35,6 @@ def train(model, config, logger, record):
     dataset = assign_user_data(config, logger)
 
     # initialize the delta offset buffers and local residual buffers
-    offset_buffers = []
-    residual_buffers = []
-    for user in range(users_to_sample):
-        offset_buffers.append(WeightBuffer(model.state_dict(), mode="zeros"))
-        residual_buffers.append(WeightBuffer(model.state_dict(), mode="zeros"))
-
     global_updater = GlobalUpdater(config, model.state_dict()) 
 
     # before optimization, report the result first
@@ -55,26 +49,21 @@ def train(model, config, logger, record):
             user_resource = assign_user_resource(config, user_id, 
                                 dataset["train_data"], dataset["user_with_data"])
             updater = LocalUpdater(user_resource, config)
-            updater.local_step(model, offset_buffers[user_id])
+            updater.local_step(model)
             local_package = updater.uplink_transmit()
             local_packages.append(local_package)
 
         # Update the global model
-        global_updater.global_step(model, local_packages, residual_buffers)
-
-        # Update local offsets
-        update_offset_buffers(offset_buffers, 
-            residual_buffers,
-            global_updater.accumulated_delta, 
-            config.tau) 
+        global_updater.global_step(model, local_packages)
 
         # log and record
         logger.info("Round {:d}".format(comm_round))
         validate_and_log(model, dataset, config, record, logger)
 
-        # if comm_round == config.scheduler[0]:
-        #     config.lr *= config.lr_scaler
-        #     config.scheduler.pop(0)
+        if comm_round == config.scheduler[0]:
+            config.lr *= config.lr_scaler
+            config.scheduler.pop(0)
+        # config.lr *= 0.9
 
 def main():
     config = load_config()
