@@ -53,10 +53,6 @@ scheduler:
 # - 40
 - 1000
 
-# predictor: previous_frame | delta_step 
-# quantization_level: (2*s + 1)
-# combined_quantize: whether or not the MSB is 
-#                   combined in the quantization  
 quantization_level: 2
 # quantization_level: 0
 # quantizer: "plain"
